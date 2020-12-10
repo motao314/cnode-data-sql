@@ -2,6 +2,7 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const mysql = require('mysql');
 const crypto = require("crypto");
+const { resolve } = require('path');
 const app = new Koa();
 const router = new Router();
 const connection = mysql.createConnection({
@@ -18,8 +19,47 @@ router.get('/', ctx => {
 });
 router.get('/api/user/:loginname', ctx => {
     const {loginname} = ctx.params;
-    
+    return new Promise(resolve=>{
+      const sql = "SELECT * FROM `users` WHERE `loginname` = '"+loginname+"'";
+      connection.query(sql,(err,res)=>{
+        if(err) throw err;
+        resolve(res[0]);
+      })
+    }).then((info)=>{
+        const sql = "SELECT * FROM `topics` WHERE `author` = '"+loginname+"'";
+        return new Promise(resolve=>{
+          connection.query(sql,(err,res)=>{
+            if(err) throw err;
+            info["topics"] = res;
+            resolve(info);
+          })  
+        });
+    }).then((info)=>{
+      const sql = "SELECT * FROM `replies` WHERE `loginname` = '"+loginname+"'";
+      return new Promise(resolve=>{
+        connection.query(sql,(err,res)=>{
+          if(err) throw err;
+          //console.log(res);
+          const replies_topic = [...(new Set(res.map(item=>item.topic_id)))];
+         // console.log(replies_topic);
+          ctx.body = replies_topic;
+          resolve();
+        })  
+      });
+  })
 });
+router.get('/api/topics', ctx => {
+  const sql = "SELECT * FROM `topics` WHERE `author` = '"+loginname+"'";
+      return new Promise(resolve=>{
+        connection.query(sql,(err,res)=>{
+          if(err) throw err;
+          
+          resolve();
+        })  
+      });
+  })
+
+
 
 app.use(router.routes());
 app.listen(3000);
