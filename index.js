@@ -6,6 +6,22 @@ const { resolve } = require('path');
 const app = new Koa();
 const router = new Router();
 const session = require('koa-session');
+const topicKeys = 'DISTINCT `topics`.`id`,`topics`.`tab`,`topics`.`content`,`topics`.`title`,`topics`.`last_reply_at`,`topics`.`good`,`topics`.`top`,`topics`.`reply_count`,`topics`.`visit_count`,`topics`.`create_at`,`users`.`loginname`,`users`.`loginname`,`users`.`avatar_url`';
+const formatTopicsData = (data)=>{
+  data = data.map(item=>{
+    let {loginname,avatar_url} = item;
+    delete item.loginname;
+    delete item.avatar_url;
+    return {
+      ...item,
+      author: {
+        loginname,
+        avatar_url
+      }
+    }
+  });
+  return data;
+};
 app.keys = ['sign'];
 const CONFIG = {
   key: 'koa.sess',
@@ -72,11 +88,13 @@ router.get('/api/topics', ctx => {
     default:
       sql = " WHERE `tab` = '" + tab + "'";
   }
-  // 
+  // 	
+  // SELECT `topics`.`*`,`users`.`loginname` FROM `topics` left join `users` on `topics`.`author` = `users`.`loginname`
   return new Promise(resolve => {
-    const nowSql = "SELECT * FROM `topics`";
+    const nowSql = "SELECT "+topicKeys+" FROM `topics` left join `users` on `topics`.`author` = `users`.`loginname`";
     connection.query(nowSql + sql + sqlLimit, (err, res) => {
       if (err) throw err;
+      res = formatTopicsData(res);
       resolve(res);
     })
   }).then((data) => {
@@ -106,9 +124,10 @@ router.get('/api/topics/:loginname', ctx => {
   let start = (Number(page) - 1) * limit;
   let sqlLimit = " LIMIT " + start + "," + limit;
   return new Promise(resolve => {
-    const nowSql = "SELECT * FROM `topics`";
+    const nowSql = "SELECT "+topicKeys+" FROM `topics` left join `users` on `topics`.`author` = `users`.`loginname`";
     connection.query(nowSql + sql + sqlLimit, (err, res) => {
       if (err) throw err;
+      res = formatTopicsData(res);
       resolve(res);
     })
   }).then((data) => {
@@ -125,6 +144,88 @@ router.get('/api/topics/:loginname', ctx => {
       })
     })
   });
+});
+/*
+  获取用户参与的主题
+*/
+router.get('/api/reply_topics/:loginname', ctx => {
+  const { loginname } = ctx.params;
+  let sql = " where `replies`.`loginname` = '" + loginname + "' AND `topics`.`author` <> `replies`.`loginname`";
+  const { page = "1", limit = 20 } = ctx.query;
+  let start = (Number(page) - 1) * limit;
+  let sqlLimit = " LIMIT " + start + "," + limit;
+  return new Promise(resolve => {
+    const nowSql = "SELECT "+topicKeys+" FROM (`replies` left join `topics` on `replies`.`topic_id` = `topics`.`id`) left join `users` on `topics`.`author` = `users`.`loginname`";
+    connection.query(nowSql + sql + sqlLimit, (err, res) => {
+      if (err) throw err;
+      res = formatTopicsData(res);
+      resolve(res);
+    })
+  }).then((data) => {
+    const nowSql = "SELECT COUNT(DISTINCT `topics`.`id`) FROM (`replies` left join `topics` on `replies`.`topic_id` = `topics`.`id`) left join `users` on `topics`.`author` = `users`.`loginname`";
+    return new Promise(resolve => {
+      connection.query(nowSql + sql, (err, res) => {
+        if (err) throw err;
+        resolve();
+        console.log(res);
+        ctx.body = {
+          code: 200,
+          data,
+          len: res[0]["COUNT(DISTINCT `topics`.`id`)"]
+        };
+      })
+    })
+  });
+});
+/*
+  获取文章详情
+*/
+router.get('/api/topic/:topic_id', ctx => {
+  const { topic_id } = ctx.params;
+  let sql = " where `id` = '" + topic_id + "'";
+  return new Promise(resolve => {
+    const nowSql = "SELECT "+topicKeys+" FROM `topics` left join `users` on `topics`.`author` = `users`.`loginname`";
+    connection.query(nowSql + sql, (err, res) => {
+      if (err) throw err;
+      resolve();
+      res = formatTopicsData(res)[0];
+      ctx.body = {
+        code: 200,
+        res
+      };
+    })
+  });
+});
+/*
+  获取文章评论
+*/
+router.get('/api/replys/:topic_id', ctx => {
+  const { topic_id } = ctx.params;
+  let sql = " where `topic_id` = '" + topic_id + "'";
+  const { page = "1", limit = 20 } = ctx.query;
+  let start = (Number(page) - 1) * limit;
+  let sqlLimit = " LIMIT " + start + "," + limit;
+  return new Promise(resolve => {
+    const nowSql = "SELECT * FROM `replies` left join `users` on `replies`.`loginname` = `users`.`loginname`";
+    connection.query(nowSql + sql + sqlLimit, (err, res) => {
+      if (err) throw err;
+      res = formatTopicsData(res);
+      resolve(res);
+    })
+  }).then((data) => {
+    const nowSql = "SELECT COUNT(*) FROM `replies`";
+    return new Promise(resolve => {
+      connection.query(nowSql + sql, (err, res) => {
+        if (err) throw err;
+        resolve();
+        ctx.body = {
+          code: 200,
+          data,
+          len: res[0]["COUNT(*)"]
+        };
+      })
+    })
+  });;
 });
 app.use(router.routes());
 app.listen(3000);
