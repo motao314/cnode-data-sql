@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `article_contents`;
 CREATE TABLE `article_contents` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '文章内容ID',
   `article_id` int unsigned NOT NULL COMMENT '关联文章ID',
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '文章内容',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '文章内容',
   PRIMARY KEY (`id`),
   UNIQUE KEY `article_id` (`article_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -42,7 +42,7 @@ COMMIT;
 DROP TABLE IF EXISTS `articles`;
 CREATE TABLE `articles` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '文章ID',
-  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '文章标题',
+  `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '文章标题',
   `user_id` int NOT NULL COMMENT '关联用户ID',
   `view_count` int unsigned NOT NULL DEFAULT '0' COMMENT '阅读总数',
   `reply_count` int unsigned NOT NULL DEFAULT '0' COMMENT '回复总数',
@@ -84,8 +84,8 @@ COMMIT;
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '用户ID',
-  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '用户名',
-  `password` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '用户密码',
+  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '用户名',
+  `password` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '用户密码',
   `avatar` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '用户头像',
   `is_admin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为管理员',
   `created_at` bigint unsigned NOT NULL COMMENT '用户注册时间',
