@@ -1,0 +1,548 @@
+[
+  {
+    "type": "GET",
+    "url": "/article/:id",
+    "title": "获取文章详情",
+    "name": "getArticle",
+    "group": "Article",
+    "version": "0.1.0",
+    "parameter": {
+      "fields": {
+        "params": [
+          {
+            "group": "params",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>文章ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>文章ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>文章标题</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>文章所属用户ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "viewCount",
+            "description": "<p>文章点击次数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "replyCount",
+            "description": "<p>文章回复次数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "createdAt",
+            "description": "<p>文章发表时间</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>业务逻辑错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>业务逻辑错误描述</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "3011",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": 1021,\n    \"message\": \"缺少文章ID参数\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "3012",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": 3012,\n    \"message\": \"文章不存在\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "3013",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": 3013,\n    \"message\": \"文章内容不存在\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/controllers/article.js",
+    "groupTitle": "Article",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8888/api/article/:id"
+      }
+    ]
+  },
+  {
+    "type": "GET",
+    "url": "/articles",
+    "title": "获取文章列表",
+    "name": "getArticles",
+    "group": "Article",
+    "version": "0.1.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "1",
+            "description": "<p>当前页码数</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "limit",
+            "defaultValue": "5",
+            "description": "<p>每页显示数据条数</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "page",
+            "description": "<p>当前页码数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "limit",
+            "description": "<p>每页显示数据条数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "count",
+            "description": "<p>总数据条数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "pages",
+            "description": "<p>总页码数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object[]",
+            "optional": false,
+            "field": "articles[]",
+            "description": "<p>文章数组</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "articles.id",
+            "description": "<p>文章ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "articles.title",
+            "description": "<p>文章标题</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "articles.userId",
+            "description": "<p>文章所属用户ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "articles.viewCount",
+            "description": "<p>文章点击次数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "articles.replyCount",
+            "description": "<p>文章回复次数</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "articles.createdAt",
+            "description": "<p>文章发表时间</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>业务逻辑错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>业务逻辑错误描述</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/controllers/article.js",
+    "groupTitle": "Article",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8888/api/articles"
+      }
+    ]
+  },
+  {
+    "type": "POST",
+    "url": "/article",
+    "title": "发布文章",
+    "name": "postArticle",
+    "group": "Article",
+    "version": "0.1.0",
+    "permission": [
+      {
+        "name": "User"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization value.</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>文章标题</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>文章内容</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>添加成功后的文章ID</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>业务逻辑错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>业务逻辑错误描述</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "3021",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": 3021,\n    \"message\": \"文章标题和内容不能为空\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/controllers/article.js",
+    "groupTitle": "Article",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8888/api/article"
+      }
+    ]
+  },
+  {
+    "type": "POST",
+    "url": "/auth/login",
+    "title": "用户登录",
+    "name": "AuthLogin",
+    "group": "Auth",
+    "version": "0.1.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>登录用户名</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>登录密码</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>用户id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>用户名</p>"
+          }
+        ],
+        "header": [
+          {
+            "group": "header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>登录成功后返回token</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>业务逻辑错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>业务逻辑错误描述</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "1021",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": 1021,\n    \"message\": \"登录用户名和密码不允许为空\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "1022",
+          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": 1022,\n    \"message\": \"用户不存在\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "1023",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n    \"code\": 1023,\n    \"message\": \"密码错误\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/controllers/auth.js",
+    "groupTitle": "Auth",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8888/api/auth/login"
+      }
+    ]
+  },
+  {
+    "type": "POST",
+    "url": "/auth/register",
+    "title": "用户注册",
+    "name": "AuthRegister",
+    "group": "Auth",
+    "version": "0.1.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>登录用户名</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>登录密码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "repassword",
+            "description": "<p>重复密码</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>用户id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>用户名</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Number",
+            "optional": false,
+            "field": "code",
+            "description": "<p>业务逻辑错误码</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>业务逻辑错误描述</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "1011",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": 1011,\n    \"message\": \"注册用户名和密码不允许为空\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "1012",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": 1012,\n    \"message\": \"两次输入密码不一致\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "1013",
+          "content": "HTTP/1.1 409 CONFLICT\n{\n    \"code\": 1013,\n    \"message\": \"用户名已经被注册了\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/controllers/auth.js",
+    "groupTitle": "Auth",
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8888/api/auth/register"
+      }
+    ]
+  }
+]

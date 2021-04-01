@@ -1,20 +1,36 @@
 {
-  "name": "cnode-sql",
+  "name": "kkb-cnode",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/app.js",
+    "test": "mocha ./test/article.test.js",
+    "api": "apidoc -i ./src/ -o ./apidoc/",
+    "doc": "http-server ./apidoc -c-1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://e.coding.net/kkb-adv/kkb-cnodekkb-cnode/kkb-cnode.git"
+  },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "koa": "^2.13.0",
+    "@koa/cors": "^3.1.0",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
     "koa-router": "^10.0.0",
-    "koa-session": "^6.1.0",
-    "mysql": "^2.18.1",
-    "require-directory": "^2.1.1",
-    "svg-captcha": "^1.4.0"
+    "koa-static-cache": "^5.1.4",
+    "mysql2": "^2.2.5"
+  },
+  "devDependencies": {
+    "apidoc": "^0.26.0",
+    "http-server": "^0.12.3",
+    "mocha": "^8.2.1",
+    "nodemon": "^2.0.7",
+    "npm": "^6.14.11",
+    "supertest": "^5.0.0-0"
   }
 }

@@ -1,0 +1,94 @@
+<mxfile host="65bd71144e" pages="1">
+    <diagram id="bZt9UJ9Iiwol7YGJl0LJ" name="Page-1">
+        <mxGraphModel dx="686" dy="438" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="11" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="600" height="450" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="50" width="370" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="200" width="180" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="50.5" y="390" width="580" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="WebServer&lt;br&gt;（提供API服务）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;horizontal=0;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="110" width="60" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="API&amp;nbsp; Document&lt;br&gt;（API文档生成）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;horizontal=0;direction=west;flipH=1;flipV=1;rotation=-180;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="210" width="50" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="DataBase(MySQL)&lt;br&gt;（数据持久化）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="425" width="170" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="" style="shape=flexArrow;endArrow=classic;html=1;labelBackgroundColor=#000000;fillColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="234.66" y="360" as="sourcePoint"/>
+                        <mxPoint x="234.66" y="390" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="" style="shape=flexArrow;endArrow=classic;html=1;labelBackgroundColor=#000000;fillColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="420" y="239.5" as="sourcePoint"/>
+                        <mxPoint x="450" y="239.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="70" width="300" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="node.js" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="110" y="80" width="280" height="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="Koa&lt;br&gt;（基于Node.js的WebServer框架）" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="110" width="258.5" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="50" width="180" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="API Test&lt;br&gt;（API测试）" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;horizontal=0;direction=west;flipH=1;flipV=1;rotation=-180;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="50" width="50" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="" style="shape=flexArrow;endArrow=classic;html=1;labelBackgroundColor=#000000;fillColor=#000000;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="450" y="114.5" as="sourcePoint"/>
+                        <mxPoint x="420" y="114.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="33" value="supertest" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="60" width="130" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="mocha" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="115" width="130" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="apidoc" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="225" width="130" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="Middlewares&lt;br&gt;（处理具体业务的第三方与自定义中间件）" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="132.75" y="150" width="237.25" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="@koa/cors" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="277.25" y="195" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="jsonwebtoken" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="265" width="100" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="koa-body" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="277.25" y="230" width="72.75" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="koa-router" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="230" width="100" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="koa-static-cache" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="195" width="98" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="mysql2" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="277.25" y="265" width="72.75" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
