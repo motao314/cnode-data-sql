@@ -4,13 +4,14 @@ const auth = require('./middlewares/auth');
 
 const { main } = require('./controllers/main');
 const { register, login } = require('./controllers/auth');
-const { getProfile, postAvatar } = require('./controllers/user');
-const { getArticles, getArticle, postArticle, patchArticleViewCount } = require('./controllers/article');
+const { getProfile: getUserProfile, postAvatar: postUserAvatar, getArticles: getUserArticles, getReplies: getUserReplies } = require('./controllers/user');
+const { getCategories } = require('./controllers/category');
+const { getArticles, getArticle, postArticle, patchArticleViewCount, patchArticleTop } = require('./controllers/article');
 const { getReplies, postReply } = require('./controllers/reply');
 
-const { getUsers: adminGetUsers } = require('./controllers/admin/user');
-const { getArticles: adminGetArticles } = require('./controllers/admin/article');
-const { getReplies: adminGetReplies } = require('./controllers/admin/reply');
+// const { getUsers: adminGetUsers } = require('./controllers/admin/user');
+// const { getArticles: adminGetArticles } = require('./controllers/admin/article');
+// const { getReplies: adminGetReplies } = require('./controllers/admin/reply');
 
 const routes = [
 
@@ -44,9 +45,7 @@ const routes = [
         method: 'get',
         url: '/user/profile',
         middlewares: [
-            auth(),
-            koaBody(),
-            getProfile
+            getUserProfile
         ]
     },
 
@@ -62,7 +61,31 @@ const routes = [
                     keepExtensions: true
                 }
             }),
-            postAvatar
+            postUserAvatar
+        ]
+    },
+
+    {
+        method: 'get',
+        url: '/user/articles',
+        middlewares: [
+            getUserArticles
+        ]
+    },
+
+    {
+        method: 'get',
+        url: '/user/replies',
+        middlewares: [
+            getUserReplies
+        ]
+    },
+
+    {
+        method: 'get',
+        url: '/categories',
+        middlewares: [
+            getCategories
         ]
     },
 
@@ -93,23 +116,32 @@ const routes = [
     },
 
     {
-        method: 'get',
-        url: '/article/:id',
+        method: 'patch',
+        url: '/article/:id(\\d+)/view_count',
         middlewares: [
             patchArticleViewCount
         ]
     },
 
     {
+        method: 'patch',
+        url: '/article/:id(\\d+)/top',
+        middlewares: [
+            koaBody(),
+            patchArticleTop
+        ]
+    },
+
+    {
         method: 'get',
-        url: '/replies/:articleId',
+        url: '/replies',
         middlewares: [
             getReplies
         ]
     },
     {
         method: 'post',
-        url: '/reply/:articleId',
+        url: '/reply',
         middlewares: [
             auth(),
             koaBody(),
@@ -120,28 +152,28 @@ const routes = [
 ];
 
 const adminRoutes = [
-    {
-        method: 'get',
-        url: '/users',
-        middlewares: [
-            adminGetUsers
-        ]
-    },
+    // {
+    //     method: 'get',
+    //     url: '/users',
+    //     middlewares: [
+    //         adminGetUsers
+    //     ]
+    // },
 
-    {
-        method: 'get',
-        url: '/articles',
-        middlewares: [
-            adminGetArticles
-        ]
-    },
-    {
-        method: 'get',
-        url: '/replies',
-        middlewares: [
-            adminGetReplies
-        ]
-    }
+    // {
+    //     method: 'get',
+    //     url: '/articles',
+    //     middlewares: [
+    //         adminGetArticles
+    //     ]
+    // },
+    // {
+    //     method: 'get',
+    //     url: '/replies',
+    //     middlewares: [
+    //         adminGetReplies
+    //     ]
+    // }
 ]
 
 module.exports = {

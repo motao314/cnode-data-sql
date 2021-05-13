@@ -27,21 +27,21 @@ describe('用户接口', async function () {
 
         const url = '/profile';
 
-        it('没有登录', async () => {
-            await request.get('/profile').expect(401);
-        });
+        it('要获取的用户信息不存在', async () => {
+            await request.get(url).query({}).expect(404);
+        })
 
-        it('获取用户基础信息', async () => {
-            await request.get('/profile').set({
-                'authorization': authorizationString
+        it('通过id获取用户基础信息', async () => {
+            await request.get(url).query({
+                type: 0,
+                value: 1
             }).expect(200);
         });
-    });
-
-    describe('编辑用户基础信息', async () => {
-
-        it('编辑用户基础信息', async () => {
-            // TODO: 编辑用户基础信息
+        it('通过username获取用户基础信息', async () => {
+            await request.get(url).query({
+                type: 1,
+                value: initUser.username
+            }).expect(200);
         });
     });
 
@@ -58,6 +58,25 @@ describe('用户接口', async function () {
             await request.post('/avatar').set({
                 'authorization': authorizationString
             }).attach('avatar', avatarUploadFile).expect(200);
+        });
+    });
+
+    describe('获取指定用户发布的文章', async () => {
+
+        let url = '/articles';
+
+        it('获取指定用户发布的文章', async () => {
+            await request.get(url).query({userId: 1}).expect(200);
+        });
+
+    });
+
+    describe('获取指定用户回复的所有文章', async () => {
+
+        let url = '/replies';
+
+        it('获取指定用户回复的所有文章', async () => {
+            await request.get(url).query({userId: 1}).expect(200);
         });
     });
 })

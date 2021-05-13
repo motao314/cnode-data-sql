@@ -93,6 +93,9 @@ module.exports.register = async (ctx, next) => {
 *
 * @apiSuccess {Number} id 用户id
 * @apiSuccess {String} username 用户名
+* @apiSuccess {Number} isAdmin 是否为管理员 1=是，0=否 
+* @apiSuccess {String} avatar 用户头像 
+* @apiSuccess {Number} createdAt 用户注册时间戳 
 * @apiSuccess (header) {String} authorization 登录成功后返回token
 *
 * @apiError {Number} code 业务逻辑错误码
@@ -131,7 +134,7 @@ module.exports.login = async (ctx, next) => {
 
 
     let [[user]] = await ctx.state.db.query(
-        "SELECT `id`, `username`, `password`, `is_admin`, `created_at`, `last_logined_at` FROM `users` WHERE `username`=?",
+        "SELECT `id`, `username`, `password`, `is_admin` as `isAdmin`, `avatar`, `created_at` as `createdAt`, `last_logined_at` as `lastLoginedAt` FROM `users` WHERE `username`=?",
         [username]
     );
 
@@ -153,14 +156,16 @@ module.exports.login = async (ctx, next) => {
     // jwt用户授权
     let token = jsonwebtoken.sign({
         id: user.id,
-        username: user.username,
-        isAdmin: user.is_admin
+        username: user.username
     }, config.auth.secretKey);
 
     ctx.set('Authorization', token);
 
     ctx.body = {
         id: user.id,
-        username
+        username: user.username,
+        isAdmin: user.isAdmin,
+        avatar: user.avatar,
+        createdAt: user.createdAt
     }
 }

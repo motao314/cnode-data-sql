@@ -1,13 +1,12 @@
 const mysql2 = require('mysql2/promise');
+let db;
 
 module.exports = (config) => {
     return async (ctx, next) => {
 
-        if (!ctx.state.db) {
+        if (!db) {
             try {
-                ctx.state.db = await mysql2.createConnection(config);
-                // ctx.state.db = {};
-
+                db = await mysql2.createConnection(config);
             } catch (err) {
                 ctx.throw(500, {
                     code: -1,
@@ -16,7 +15,9 @@ module.exports = (config) => {
                 });
             }
         }
-
+        if (db) {
+            ctx.state.db = db;
+        }
         await next();
     }
 }

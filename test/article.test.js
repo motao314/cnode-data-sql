@@ -34,12 +34,12 @@ describe('文章接口', async function () {
 
         const url = '/article';
 
-        it('成功获取指定文章详情', async () => {
-            // TODO: 成功获取指定文章详情
+        it('文章不存在', async () => {
+            await request.get(url + '/-1').expect(404);
         });
 
-        it('获取不存在的文章详情', async () => {
-            // TODO: 获取不存在的文章详情
+        it('成功获取指定文章详情', async () => {
+            await request.get(url + '/1').expect(200);
         });
     });
 
@@ -48,60 +48,50 @@ describe('文章接口', async function () {
         const method = 'POST';
         const url = '/article';
 
-        it('没有登录', async () => {
-            // TODO: 没有登录
+        it('没有权限', async () => {
+            await request.post(url).send({}).expect(401);
         });
 
         it('参数错误', async () => {
-            // TODO: 参数错误
+            await request.post(url).set('authorization', authorizationString).send({}).expect(400);
         });
 
         it('成功添加一篇新的文章', async () => {
-            // TODO: 成功添加一篇新的文章
+            await request.post(url).set('authorization', authorizationString).send({
+                categoryId: 1,
+                title: '测试标题',
+                content: '测试的内容'
+            }).expect(200);
         });
     });
 
-    describe('修改指定文章', async () => {
+    describe('更新指定文章的 viewCount', async () => {
 
         const method = 'PATCH';
-        const url = '/article';
+        const url = '/article/-1/view_count';
+        const url2 = '/article/1/view_count';
 
-        it('没有登录', async () => {
-            // TODO: 没有登录
+        it('指定文章不存在', async () => {
+            await request.patch(url).expect(404);
         });
 
-        it('没有权限', async () => {
-            // TODO: 没有权限
-        });
-
-        it('指定要编辑的文章不存在', async () => {
-            // TODO: 指定要编辑的文章不存在 
-        });
-
-        it('指定文章编辑成功', async () => {
-            // TODO: 指定文章编辑成功
+        it('成功更新指定文章的 viewCount', async () => {
+            await request.patch(url2).expect(200);
         });
     });
 
-    describe('删除一篇指定的文章', async () => {
+    describe('置顶文章', async () => {
 
-        const method = 'DELETE';
-        const url = '/article';
+        const method = 'PATCH';
+        const url = '/article/-1/top';
+        const url2 = '/article/1/top';
 
-        it('没有登录', async () => {
-            // TODO: 没有登录
+        it('指定文章不存在', async () => {
+            await request.patch(url).expect(404);
         });
 
-        it('没有权限', async () => {
-            // TODO: 没有权限
-        });
-
-        it('指定要删除的文章不存在', async () => {
-            // TODO: 指定要删除的文章不存在
-        });
-
-        it('指定文章删除成功', async () => {
-            // TODO: 指定文章删除成功
+        it('成功置顶指定的文章', async () => {
+            await request.patch(url2).send({isTop: 1}).expect(200);
         });
     });
 

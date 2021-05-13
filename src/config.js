@@ -8,7 +8,7 @@ module.exports = {
         passwordSalt: 'kkb'
     },
     auth: {
-        secretKey: 'kkb-cnode'
+        secretKey: 'cnode'
     },
     upload: {
         dir: path.resolve(__dirname, './public/avatar')
@@ -17,7 +17,7 @@ module.exports = {
         host: '127.0.0.1',
         port: 3306,
         user: 'root',
-        password: '',
-        database: 'kkb-cnode'
+        password: '12345678',
+        database: 'cnode'
     }
 }
