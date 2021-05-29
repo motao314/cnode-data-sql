@@ -126,11 +126,6 @@
           "title": "3011",
           "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": 3011,\n    \"message\": \"文章不存在\"\n}",
           "type": "json"
-        },
-        {
-          "title": "3012",
-          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": 3012,\n    \"message\": \"文章内容不存在\"\n}",
-          "type": "json"
         }
       ]
     },
@@ -255,13 +250,6 @@
             "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "articles.userId",
-            "description": "<p>文章所属用户ID</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
             "field": "articles.viewCount",
             "description": "<p>文章点击次数</p>"
           },
@@ -360,8 +348,8 @@
             "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "id",
-            "description": "<p>文章</p>"
+            "field": "isTop",
+            "description": "<p>当前置顶状态</p>"
           }
         ]
       }
@@ -384,19 +372,7 @@
             "description": "<p>业务逻辑错误描述</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "3041",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": 3041,\n    \"message\": \"缺少参数\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "3042",
-          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": 3042,\n    \"message\": \"文章不存在\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "filename": "src/controllers/article.js",
     "groupTitle": "Article",
@@ -433,13 +409,6 @@
             "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "id",
-            "description": "<p>文章</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
             "field": "viewCount",
             "description": "<p>文章当前查看总数</p>"
           }
@@ -464,14 +433,7 @@
             "description": "<p>业务逻辑错误描述</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "3031",
-          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": 3031,\n    \"message\": \"文章不存在\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "filename": "src/controllers/article.js",
     "groupTitle": "Article",
@@ -542,6 +504,41 @@
             "optional": false,
             "field": "id",
             "description": "<p>添加成功后的文章ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>文章所属分类ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>文章标题</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>文章内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>添加作者id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "createdAt",
+            "description": "<p>文章添加时间戳</p>"
           }
         ]
       }
@@ -610,6 +607,15 @@
     },
     "success": {
       "fields": {
+        "header": [
+          {
+            "group": "header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>登录成功后返回token</p>"
+          }
+        ],
         "Success 200": [
           {
             "group": "Success 200",
@@ -627,13 +633,6 @@
           },
           {
             "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "isAdmin",
-            "description": "<p>是否为管理员 1=是，0=否</p>"
-          },
-          {
-            "group": "Success 200",
             "type": "String",
             "optional": false,
             "field": "avatar",
@@ -645,15 +644,6 @@
             "optional": false,
             "field": "createdAt",
             "description": "<p>用户注册时间戳</p>"
-          }
-        ],
-        "header": [
-          {
-            "group": "header",
-            "type": "String",
-            "optional": false,
-            "field": "authorization",
-            "description": "<p>登录成功后返回token</p>"
           }
         ]
       }
@@ -1191,13 +1181,6 @@
             "optional": false,
             "field": "createdAt",
             "description": "<p>注册时间</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "lastLoginedAt",
-            "description": "<p>最后一次时间</p>"
           }
         ]
       }
@@ -1238,10 +1221,10 @@
     ]
   },
   {
-    "type": "POST",
+    "type": "PATCH",
     "url": "/user/avatar",
     "title": "上传头像",
-    "name": "postAvatar",
+    "name": "patchAvatar",
     "group": "User",
     "version": "0.1.0",
     "permission": [
@@ -1452,7 +1435,28 @@
             "type": "Number",
             "optional": false,
             "field": "id",
-            "description": "<p>回复成功的ID</p>"
+            "description": "<p>当前回复ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "userId",
+            "description": "<p>当前回复用户ID</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "content",
+            "description": "<p>回复内容</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "createdAt",
+            "description": "<p>回复时间戳</p>"
           }
         ]
       }
@@ -1480,11 +1484,6 @@
         {
           "title": "4020",
           "content": "HTTP/1.1 400 Bad Request\n{\n    \"code\": 4020,\n    \"message\": \"参数错误\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "4021",
-          "content": "HTTP/1.1 404 Not Found\n{\n    \"code\": 4021,\n    \"message\": \"文章不存在\"\n}",
           "type": "json"
         }
       ]

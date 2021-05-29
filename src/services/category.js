@@ -1,6 +1,6 @@
 module.exports = (db) => {
     return {
-        getCategories: async () => {
+        getCategories: async function() {
             let sql = '';
             let preparedValues = [];
 

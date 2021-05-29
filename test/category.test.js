@@ -19,7 +19,7 @@ describe('分类接口', async function () {
         initUser = JSON.parse(
             fs.readFileSync(path.resolve(__dirname, 'data') + '/init-user.json').toString()
         );
-        authorizationString = fs.readFileSync(path.resolve(__dirname, 'data') + '/authorization.json').toString();
+        authorizationString = fs.readFileSync(path.resolve(__dirname, 'data') + '/authorization.txt').toString();
     });
 
     describe('获取所有分类', async() => {

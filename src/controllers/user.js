@@ -11,8 +11,8 @@
 * @apiSuccess {Number} id 用户ID
 * @apiSuccess {String} username 用户名
 * @apiSuccess {String} avatar 头像
-* @apiSuccess {Number} createdAt 注册时间 
-* @apiSuccess {Number} lastLoginedAt 最后一次时间
+* @apiSuccess {Number} createdAt 注册时间
+*
 * @apiError {Number} code 业务逻辑错误码
 * @apiError {String} message 业务逻辑错误描述
 * @apiErrorExample {json} 2011
@@ -26,24 +26,11 @@ module.exports.getProfile = async (ctx, next) => {
 
     let { type, value } = ctx.request.query;
     type = Number(type) || 0;
-    value = (value || '').trim();
+    value = value && value.trim();
 
-    let sql = '';
-    let preparedValues = [];
-    let where = '';
+    const userService = ctx.state.services.user;
 
-    if (type === 0) {
-        where = ' WHERE `id`=? ';
-    } else {
-        where = ' WHERE `username`=? ';
-    }
-
-    sql = "SELECT `id`, `username`, `avatar`, `created_at` as `createdAt`, `last_logined_at` as `lastLoginedAt` FROM `users` " + where;
-    preparedValues = [value];
-    let [[user]] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    );
+    let user = await userService.getProfile(value, type);
 
     if (!user) {
         ctx.throw(404, {
@@ -56,13 +43,13 @@ module.exports.getProfile = async (ctx, next) => {
         id: user.id,
         username: user.username,
         avatar: user.avatar,
-        createdAt: user.createdAt,
-        lastLoginedAt: user.lastLoginedAt
+        createdAt: user.createdAt
     };
 }
+
 /**
-* @api {POST} /user/avatar 上传头像 
-* @apiName postAvatar
+* @api {PATCH} /user/avatar 上传头像
+* @apiName patchAvatar
 * @apiGroup User
 * @apiVersion 0.1.0
 * 
@@ -72,19 +59,13 @@ module.exports.getProfile = async (ctx, next) => {
 *
 * @apiSuccess {String} name 上传成功后的文件名 
 */
-module.exports.postAvatar = async (ctx, next) => {
+module.exports.patchAvatar = async (ctx, next) => {
 
     let { name } = ctx.request.files.avatar;
 
-    let sql = '';
-    let preparedValues = [];
+    const userService = ctx.state.services.user;
 
-    sql = "UPDATE `users` SET `avatar` = ? WHERE `id`=?";
-    preparedValues = [name, ctx.state.user.id];
-    let [{ affectedRows }] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    );
+    let rs = await userService.patchAvatar(ctx.state.user.id, name);
 
     ctx.body = name;
 }
@@ -121,37 +102,11 @@ module.exports.getArticles = async (ctx, next) => {
     userId = Number(userId) || 0;
     page = Number(page) || 1;
     limit = Number(limit) || 5;
-    let offset = (page - 1) * limit;
 
-    let sql = '';
-    let preparedValues = [];
-    let where = '';
+    const userService = ctx.state.services.user;
+    const rs = await userService.getArticles(userId, page, limit);
 
-    where = ' WHERE `articles`.`user_id`=? ';
-
-    sql = "SELECT count(`articles`.`id`) as count FROM `articles` " + where;
-    preparedValues = [userId];
-    let [[{ count }]] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    );
-
-    let pages = Math.ceil((count / limit));
-
-    sql = "SELECT `articles`.`id`, `articles`.`title`, `articles`.`category_id` as `categoryId`,`articles`.`is_top` as `isTop`, `articles`.`user_id` as `userId`, `articles`.`view_count` as `viewCount`, `articles`.`reply_count` as `replyCount`, `articles`.`created_at` as `createdAt`, `users`.`username` as `username`, `users`.`avatar` as `avatar` FROM `articles` LEFT JOIN `users` ON `articles`.`user_id`=`users`.`id` " + where + " ORDER BY `articles`.`id` DESC limit ? offset ?";
-    preparedValues = [userId, limit, offset];
-    let [articles] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    );
-
-    ctx.body = {
-        page,
-        limit,
-        count,
-        pages,
-        articles
-    };
+    ctx.body = rs;
 
 }
 
@@ -184,44 +139,9 @@ module.exports.getReplies = async (ctx, next) => {
     userId = Number(userId) || 0;
     page = Number(page) || 1;
     limit = Number(limit) || 5;
-    let offset = (page - 1) * limit;
 
-    let sql = '';
-    let preparedValues = [];
-    let where = '';
+    let userService = ctx.state.services.user;
+    let rs = await userService.getReplies(userId, page, limit);
 
-    where = ' WHERE `replies`.`user_id`=? ';
-
-    // 获取当前用户的所有回复所属文章ID
-    sql = 'SELECT DISTINCT `article_id` as `articleId` FROM `replies` ' + where;
-    preparedValues = [userId];
-    let [replies] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    );
-    let articleIds = replies.map(reply => reply.articleId).join(',');
-
-    sql = "SELECT count(`id`) as count FROM `articles` WHERE `id` in (" + articleIds + ")";
-    preparedValues = [];
-    let [[{ count }]] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    );
-
-    let pages = Math.ceil((count / limit));
-
-    sql = "SELECT `id`, `title`, `user_id` as `userId`, `view_count` as `viewCount`, `reply_count` as `replyCount`, `created_at` as `createdAt` FROM articles  WHERE `id` in (" + articleIds + ") ORDER BY `id` DESC limit ? offset ?";
-    preparedValues = [limit, offset];
-    let [articles] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    );
-
-    ctx.body = {
-        page,
-        limit,
-        count,
-        pages,
-        articles
-    };
+    ctx.body = rs;
 }

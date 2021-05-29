@@ -15,6 +15,7 @@ const config = require('../config');
  *
  * @apiSuccess {Number} id 用户id
  * @apiSuccess {String} username 用户名
+ * @apiSuccess {Number} createdAt 注册时间戳
  *
  * @apiError {Number} code 业务逻辑错误码
  * @apiError {String} message 业务逻辑错误描述
@@ -56,14 +57,8 @@ module.exports.register = async (ctx, next) => {
         })
     }
 
-    // 密码加密
-    const hmac = crypto.createHmac('sha256', config.user.passwordSalt);
-    password = hmac.update(password).digest('hex');
-
-    let [[user]] = await ctx.state.db.query(
-        "SELECT `username` FROM `users` WHERE `username`=?",
-        [username]
-    );
+    const userService = ctx.state.services.user;
+    let user = await userService.getUserByUsername(username);
 
     if (user) {
         ctx.throw(409, {
@@ -71,14 +66,12 @@ module.exports.register = async (ctx, next) => {
         });
     }
 
-    let [{ insertId }] = await ctx.state.db.query(
-        "INSERT INTO `users` (`username`, `password`, `created_at`, `last_logined_at`) VALUES (?,?,?,?)",
-        [username, password, Date.now(), 0]
-    );
+    let newUser = await userService.addUser(username, password);
 
     ctx.body = {
-        id: insertId,
-        username
+        id: newUser.id,
+        username,
+        createdAt: newUser.createdAt
     }
 }
 
@@ -91,12 +84,12 @@ module.exports.register = async (ctx, next) => {
 * @apiParam {String} username 登录用户名
 * @apiParam {String} password 登录密码
 *
+* @apiSuccess (header) {String} authorization 登录成功后返回token
+*
 * @apiSuccess {Number} id 用户id
 * @apiSuccess {String} username 用户名
-* @apiSuccess {Number} isAdmin 是否为管理员 1=是，0=否 
-* @apiSuccess {String} avatar 用户头像 
+* @apiSuccess {String} avatar 用户头像
 * @apiSuccess {Number} createdAt 用户注册时间戳 
-* @apiSuccess (header) {String} authorization 登录成功后返回token
 *
 * @apiError {Number} code 业务逻辑错误码
 * @apiError {String} message 业务逻辑错误描述
@@ -132,11 +125,8 @@ module.exports.login = async (ctx, next) => {
         })
     }
 
-
-    let [[user]] = await ctx.state.db.query(
-        "SELECT `id`, `username`, `password`, `is_admin` as `isAdmin`, `avatar`, `created_at` as `createdAt`, `last_logined_at` as `lastLoginedAt` FROM `users` WHERE `username`=?",
-        [username]
-    );
+    const userService = ctx.state.services.user;
+    let user = await userService.getUserByUsername(username);
 
     if (!user) {
         ctx.throw(404, {
@@ -164,7 +154,6 @@ module.exports.login = async (ctx, next) => {
     ctx.body = {
         id: user.id,
         username: user.username,
-        isAdmin: user.isAdmin,
         avatar: user.avatar,
         createdAt: user.createdAt
     }

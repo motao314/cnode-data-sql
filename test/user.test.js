@@ -20,7 +20,7 @@ describe('用户接口', async function () {
         initUser = JSON.parse(
             fs.readFileSync(path.resolve(__dirname, 'data') + '/init-user.json').toString()
         );
-        authorizationString = fs.readFileSync(path.resolve(__dirname, 'data') + '/authorization.json').toString();
+        authorizationString = fs.readFileSync(path.resolve(__dirname, 'data') + '/authorization.txt').toString();
     });
 
     describe('获取用户基础信息', async () => {
@@ -51,11 +51,11 @@ describe('用户接口', async function () {
         let avatarUploadFile = path.resolve(__dirname, 'data') + '/avatar/2.jpg';
 
         it('没有登录', async () => {
-            await request.post('/avatar').expect(401);
+            await request.patch('/avatar').expect(401);
         });
 
         it('上传用户头像', async () => {
-            await request.post('/avatar').set({
+            await request.patch('/avatar').set({
                 'authorization': authorizationString
             }).attach('avatar', avatarUploadFile).expect(200);
         });

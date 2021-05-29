@@ -9,14 +9,10 @@
 * @apiSuccess {Number} createdAt 分类添加时间 
 */
 module.exports.getCategories = async (ctx, next) => {
-    let sql = '';
-    let preparedValues = [];
 
-    sql = 'SELECT `id`,`name`,`created_at` as `createdAt` FROM `categories`';
+    let categoryService = ctx.state.services.category;
 
-    let [categories] = await ctx.state.db.query(
-        sql
-    );
+    let categories = await categoryService.getCategories();
 
     ctx.body = categories;
 }

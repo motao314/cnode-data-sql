@@ -18,7 +18,7 @@ describe('文章接口', async function () {
         initUser = JSON.parse(
             fs.readFileSync(path.resolve(__dirname, 'data') + '/init-user.json').toString()
         );
-        authorizationString = fs.readFileSync(path.resolve(__dirname, 'data') + '/authorization.json').toString();
+        authorizationString = fs.readFileSync(path.resolve(__dirname, 'data') + '/authorization.txt').toString();
     });
 
     describe('获取文章列表', async () => {
@@ -45,7 +45,6 @@ describe('文章接口', async function () {
 
     describe('添加一篇新文章', async () => {
 
-        const method = 'POST';
         const url = '/article';
 
         it('没有权限', async () => {
@@ -67,7 +66,6 @@ describe('文章接口', async function () {
 
     describe('更新指定文章的 viewCount', async () => {
 
-        const method = 'PATCH';
         const url = '/article/-1/view_count';
         const url2 = '/article/1/view_count';
 
@@ -82,7 +80,6 @@ describe('文章接口', async function () {
 
     describe('置顶文章', async () => {
 
-        const method = 'PATCH';
         const url = '/article/-1/top';
         const url2 = '/article/1/top';
 

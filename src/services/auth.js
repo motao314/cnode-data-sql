@@ -1,7 +1,7 @@
 module.exports = (db) => {
     return {
-        register: async () => {
-            
+        register: async function() {
+
         }
     }
 }

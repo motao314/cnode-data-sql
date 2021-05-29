@@ -24,38 +24,16 @@
 */
 module.exports.getReplies = async (ctx, next) => {
 
-    let articleId = ctx.request.query.articleId;
-
-    let { page, limit } = ctx.request.query;
+    let { articleId, page, limit } = ctx.request.query;
+    articleId = Number(articleId);
     page = Number(page) || 1;
     limit = Number(limit) || 5;
-    let offset = (page - 1) * limit;
 
-    let sql = '';
-    let preparedValues = [];
+    const replyService = ctx.state.services.reply;
 
-    sql = "SELECT count(`id`) as `count` FROM `replies` WHERE `article_id`=?";
-    preparedValues = [articleId];
-    let [[{ count }]] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    );
+    let results = await replyService.getReplies(articleId, page, limit);
 
-    let pages = Math.ceil((count / limit));
-
-    sql = "SELECT `replies`.`id` as `id`, `replies`.`article_id` as `articleId`, `replies`.`user_id` as `userId`, `replies`.`content`, `replies`.`created_at` as `createdAt`, `users`.`username` as `username`, `users`.`avatar` as `avatar` FROM `replies` LEFT JOIN `users` ON `replies`.`user_id` = `users`.`id` WHERE `article_id` = ? ORDER BY `replies`.`created_at` DESC limit ? offset ?";
-    preparedValues = [articleId, limit, offset];
-    let [replies] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    );
-
-    ctx.body = {
-        page,
-        limit,
-        pages,
-        replies
-    };
+    ctx.body = results;
 }
 
 
@@ -69,7 +47,10 @@ module.exports.getReplies = async (ctx, next) => {
 *
 * @apiParam {String} content 回复内容
 *
-* @apiSuccess {Number} id 回复成功的ID
+* @apiSuccess {Number} id 当前回复ID
+* @apiSuccess {Number} userId 当前回复用户ID
+* @apiSuccess {String} content 回复内容
+* @apiSuccess {Number} createdAt 回复时间戳
 *
 * @apiError {Number} code 业务逻辑错误码
 * @apiError {String} message 业务逻辑错误描述
@@ -79,16 +60,12 @@ module.exports.getReplies = async (ctx, next) => {
 *       "code": 4020,
 *       "message": "参数错误"
 *   }
-* @apiErrorExample {json} 4021
-*   HTTP/1.1 404 Not Found
-*   {
-*       "code": 4021,
-*       "message": "文章不存在"
-*   }
 */
 module.exports.postReply = async (ctx, next) => {
 
     let {articleId, content} = ctx.request.body;
+    articleId = Number(articleId);
+    content = (content || '').trim();
 
     if (!content) {
         ctx.throw(400, {
@@ -96,40 +73,13 @@ module.exports.postReply = async (ctx, next) => {
         })
     }
 
-    let sql = '';
-    let preparedValues = [];
+    const replyService = ctx.state.services.reply;
 
-    // 查询文章是否存在
-    sql = "SELECT `id`, `reply_count` as `replyCount` FROM `articles` WHERE `id`=?";
-    preparedValues = [articleId];
-    let [[article]] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    )
+    let newReply = await replyService.postReply({
+        articleId,
+        content,
+        userId: ctx.state.user.id
+    });
 
-    if (!article) {
-        ctx.throw(404, {
-            code: 4021, message: '文章不存在'
-        })
-    }
-
-    sql = "INSERT INTO `replies` (`article_id`, `user_id`, `content`, `created_at`) VALUES (?,?,?,?)";
-    preparedValues = [articleId, ctx.state.user.id, content, Date.now()];
-    let [{ insertId }] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    )
-
-    // 更新文章reply_count
-    let articleReplyCount = article.replyCount + 1;
-    sql = "UPDATE `articles` SET `reply_count`=?";
-    preparedValues = [articleReplyCount];
-    let [{ affectedRows }] = await ctx.state.db.query(
-        sql,
-        preparedValues
-    )
-
-    ctx.body = {
-        id: insertId
-    };
+    ctx.body = newReply;
 }

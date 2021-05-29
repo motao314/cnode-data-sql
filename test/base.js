@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { request } = require('http');
 const path = require('path');
 const baseUrl = 'http://localhost:8888/api';
 const supertest = require('supertest');
@@ -15,7 +14,7 @@ const init = async () => {
 
     await initArticles();
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve ) => {
         setTimeout(() => {
             resolve();
         }, 2000);
@@ -53,7 +52,7 @@ async function initAuthorization() {
             if (!authorization) {
                 throw new Error('header authorization is not found!');
             }
-            fs.writeFileSync(path.resolve(__dirname, 'data') + '/authorization.json', authorization);
+            fs.writeFileSync(path.resolve(__dirname, 'data') + '/authorization.txt', authorization);
             authorizationString = authorization;
         }
 

@@ -18,7 +18,7 @@ describe('回复接口', function() {
         initUser = JSON.parse(
             fs.readFileSync(path.resolve(__dirname, 'data') + '/init-user.json').toString()
         );
-        authorizationString = fs.readFileSync(path.resolve(__dirname, 'data') + '/authorization.json').toString();
+        authorizationString = fs.readFileSync(path.resolve(__dirname, 'data') + '/authorization.txt').toString();
     });
 
     describe('获取某篇指定文章下的回复列表', async () => {
@@ -26,7 +26,7 @@ describe('回复接口', function() {
         const url = '/replies';
 
         it('获取指定文章下的回复列表', async () => {
-            await request.get(url).query({categoryId: 1}).expect(200);
+            await request.get(url).query({articleId: 1}).expect(200);
         });
     });
 

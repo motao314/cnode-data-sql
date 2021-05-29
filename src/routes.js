@@ -4,7 +4,7 @@ const auth = require('./middlewares/auth');
 
 const { main } = require('./controllers/main');
 const { register, login } = require('./controllers/auth');
-const { getProfile: getUserProfile, postAvatar: postUserAvatar, getArticles: getUserArticles, getReplies: getUserReplies } = require('./controllers/user');
+const { getProfile: getUserProfile, patchAvatar: patchUserAvatar, getArticles: getUserArticles, getReplies: getUserReplies } = require('./controllers/user');
 const { getCategories } = require('./controllers/category');
 const { getArticles, getArticle, postArticle, patchArticleViewCount, patchArticleTop } = require('./controllers/article');
 const { getReplies, postReply } = require('./controllers/reply');
@@ -50,7 +50,7 @@ const routes = [
     },
 
     {
-        method: 'post',
+        method: 'patch',
         url: '/user/avatar',
         middlewares: [
             auth(),
@@ -61,7 +61,7 @@ const routes = [
                     keepExtensions: true
                 }
             }),
-            postUserAvatar
+            patchUserAvatar
         ]
     },
 

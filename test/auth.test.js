@@ -25,7 +25,7 @@ describe('授权接口', async function () {
         const url = '/register';
 
         it('注册用户名和密码不允许为空', async () => {
-            let res = await request.post(url).expect(400, {
+            await request.post(url).expect(400, {
                 code: 1011, message: '注册用户名和密码不允许为空'
             });
         });
@@ -42,7 +42,7 @@ describe('授权接口', async function () {
         });
 
         it('用户名已经被注册了', async () => {
-            let rs = await request.post(url)
+            await request.post(url)
                 .send({
                     username: initUser.username,
                     password: initUser.password,
@@ -54,7 +54,7 @@ describe('授权接口', async function () {
         });
 
         it('注册成功', async () => {
-            let rs = await request.post(url).send({
+            await request.post(url).send({
                 username: `test_${Date.now()}`,
                 password: '123456',
                 repassword: '123456'
@@ -74,7 +74,7 @@ describe('授权接口', async function () {
         });
 
         it('用户不存在', async () => {
-            let rs = await request.post(url).send({
+            await request.post(url).send({
                 username: `nontest_${Date.now()}`,
                 password: '123456'
             }).expect(404, {
@@ -84,7 +84,7 @@ describe('授权接口', async function () {
         });
 
         it('密码错误', async () => {
-            let rs = await request.post(url).send({
+            await request.post(url).send({
                 username: initUser.username,
                 password: initUser.password + '1',
             }).expect(401, {
@@ -101,7 +101,7 @@ describe('授权接口', async function () {
                 if (!authorization) {
                     throw new Error('header authorization is not found!');
                 }
-                fs.writeFileSync(path.resolve(__dirname, 'data') + '/authorization.json', authorization);
+                fs.writeFileSync(path.resolve(__dirname, 'data') + '/authorization.txt', authorization);
             });
         });
 
